@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const { Xvideos } = require('naughty-videos');
+const xvdl = require('xvdl');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,31 +15,35 @@ app.use(express.urlencoded({ extended: true }));
 app.post('/query', (req, res) => {
   const { query } = req.body;
 
-  Xvideos.search(query)
-    .then((data) => {
-      if (!data || data.length === 0) {
-        res.status(404).send('No results found');
-      } else {
-        const resultsText = data.map((result) => {
-          return `${result.title}\n${result.description}\n\n`;
-        }).join('');
-
-        const filePath = path.join(__dirname, 'search_results.txt');
-        fs.writeFileSync(filePath, resultsText);
-
-        res.download(filePath, 'search_results.txt', (err) => {
-          if (err) {
-            res.status(500).send('Error occurred while downloading file');
-          } else {
-            fs.unlinkSync(filePath);
-          }
-        });
-      }
-    })
-    .catch((err) => {
+  xvdl.search(query, (err, results) => {
+    if (err) {
       console.error('Error searching:', err);
       res.status(500).send('Error occurred while searching');
+      return;
+    }
+
+    if (results.length === 0) {
+      res.status(404).send('No results found');
+      return;
+    }
+
+    const videoId = results[0].id;
+    xvdl.download(videoId, (err, filePath) => {
+      if (err) {
+        console.error('Error downloading:', err);
+        res.status(500).send('Error occurred while downloading');
+        return;
+      }
+
+      res.download(filePath, 'video.mp4', (err) => {
+        if (err) {
+          res.status(500).send('Error occurred while downloading file');
+        } else {
+          fs.unlinkSync(filePath);
+        }
+      });
     });
+  });
 });
 
 app.listen(port, () => {
