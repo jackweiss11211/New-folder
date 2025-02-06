@@ -1,0 +1,13 @@
+{
+  "name": "search-app",
+  "version": "1.0.0",
+  "description": "A search app built with Node.js and Express",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "naughty-videos": "^1.0.0"
+  }
+}
