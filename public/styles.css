@@ -1,0 +1,35 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+#search-form {
+  margin-top: 20px;
+}
+
+#query {
+  width: 50%;
+  height: 30px;
+  font-size: 18px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+#search-btn {
+  width: 100px;
+  height: 30px;
+  font-size: 18px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#search-btn:hover {
+  background-color: #3e8e41;
+}
+
+#results {
+  margin-top: 20px;
+}
